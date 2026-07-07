@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 import api from '@/lib/axios';
 import { User, LoginResponse, UserRole } from '@/types';
 
-interface AuthContextType {
+export interface AuthContextType {
     user: User | null;
     isAuthenticated: boolean;
     isLoading: boolean;
@@ -19,7 +19,7 @@ interface AuthContextType {
     logout: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const dashboardRoute: Record<UserRole, string> = {
     SUPER_ADMIN: '/dashboard/super-admin',
