@@ -49,7 +49,13 @@ export function Sidebar() {
     const { user, logout } = useAuth();
     const pathname = usePathname();
 
-    if (!user) return null;
+    if (!user) {
+        return (
+            <aside className="w-64 bg-gray-900 text-white h-screen flex flex-col items-center justify-center">
+                <p className="text-gray-400">Loading...</p>
+            </aside>
+        );
+    }
 
     const links = sidebarLinks[user.role] || [];
 

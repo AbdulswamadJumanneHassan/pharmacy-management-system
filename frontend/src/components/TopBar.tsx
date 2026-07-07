@@ -7,6 +7,14 @@ import { Bell, User } from 'lucide-react';
 export function TopBar() {
     const { user } = useAuth();
 
+    if (!user) {
+        return (
+            <header className="bg-white border-b border-gray-200 px-6 py-4 h-16 flex items-center">
+                <p className="text-gray-500">Loading...</p>
+            </header>
+        );
+    }
+
     return (
         <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
             <div className="flex-1">

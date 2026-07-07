@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { Sidebar } from '@/components/Sidebar';
@@ -14,14 +14,19 @@ export default function DashboardLayout({
 }) {
     const { isAuthenticated, isLoading } = useAuth();
     const router = useRouter();
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        if (!isLoading && !isAuthenticated) {
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (mounted && !isLoading && !isAuthenticated) {
             router.replace('/login');
         }
-    }, [isAuthenticated, isLoading, router]);
+    }, [isAuthenticated, isLoading, router, mounted]);
 
-    if (isLoading) {
+    if (!mounted || isLoading) {
         return (
             <div className="h-screen flex items-center justify-center bg-gray-100">
                 <div className="flex flex-col items-center gap-4">

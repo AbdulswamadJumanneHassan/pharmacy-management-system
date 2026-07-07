@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, FormEvent } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { AlertCircle, Loader2 } from 'lucide-react';
@@ -10,10 +10,10 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const { login } = useAuth();
+    const { login, isLoading: authLoading } = useAuth();
     const router = useRouter();
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError('');
         setIsLoading(true);
@@ -22,8 +22,8 @@ export default function LoginPage() {
             await login(email, password);
             // Redirect will happen via AuthContext
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Login failed');
-        } finally {
+            const errorMessage = err instanceof Error ? err.message : 'Login failed. Please try again.';
+            setError(errorMessage);
             setIsLoading(false);
         }
     };

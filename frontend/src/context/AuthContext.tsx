@@ -32,19 +32,23 @@ export const dashboardRoute: Record<UserRole, string> = {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isMounted, setIsMounted] = useState(false);
     const router = useRouter();
 
     // Rehydrate from localStorage on mount
     useEffect(() => {
-        const stored = localStorage.getItem('pms_user');
-        if (stored) {
-            try {
+        setIsMounted(true);
+        try {
+            const stored = localStorage.getItem('pms_user');
+            if (stored && stored.trim()) {
                 setUser(JSON.parse(stored));
-            } catch {
-                localStorage.clear();
             }
+        } catch (error) {
+            console.error('Failed to parse stored user:', error);
+            localStorage.clear();
+        } finally {
+            setIsLoading(false);
         }
-        setIsLoading(false);
     }, []);
 
     const login = useCallback(async (email: string, password: string) => {
@@ -85,7 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     return (
         <AuthContext.Provider
-            value={{ user, isAuthenticated: !!user, isLoading, login, logout }}
+            value={{ user, isAuthenticated: !!user, isLoading: isLoading || !isMounted, login, logout }}
         >
             {children}
         </AuthContext.Provider>
