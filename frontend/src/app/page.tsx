@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { Loader2 } from 'lucide-react';
@@ -9,18 +9,15 @@ import { dashboardRoute } from '@/context/AuthContext';
 export default function Home() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
-  const [isRedirecting, setIsRedirecting] = useState(false);
-
   useEffect(() => {
-    if (!isLoading && !isRedirecting) {
-      setIsRedirecting(true);
+    if (!isLoading) {
       if (user) {
         router.replace(dashboardRoute[user.role]);
       } else {
         router.replace('/login');
       }
     }
-  }, [user, isLoading, router, isRedirecting]);
+  }, [user, isLoading, router]);
 
   return (
     <div className="h-screen flex items-center justify-center bg-gray-100">
@@ -30,5 +27,4 @@ export default function Home() {
       </div>
     </div>
   );
-}
 }
